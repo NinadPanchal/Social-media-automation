@@ -23,16 +23,19 @@ export default function Navbar() {
         { label: 'Features', href: '#features' },
         { label: 'Analytics', href: '#analytics' },
         { label: 'Pricing', href: '#pricing' },
+        { label: 'Docs', href: 'https://github.com/NinadPanchal/Social-media-automation#readme' },
     ];
 
     const scrollToSection = (e, href) => {
-        e.preventDefault();
-        const id = href.replace('#', '');
-        const el = document.getElementById(id);
-        if (el) {
-            const navHeight = 80;
-            const y = el.getBoundingClientRect().top + window.scrollY - navHeight;
-            window.scrollTo({ top: y, behavior: 'smooth' });
+        if (href.startsWith('#')) {
+            e.preventDefault();
+            const id = href.replace('#', '');
+            const el = document.getElementById(id);
+            if (el) {
+                const navHeight = 80;
+                const y = el.getBoundingClientRect().top + window.scrollY - navHeight;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
         }
     };
 
@@ -72,7 +75,9 @@ export default function Navbar() {
                     >
                         {/* Logo */}
                         <a
-                            href="#"
+                            href="https://github.com/NinadPanchal/Social-media-automation"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
