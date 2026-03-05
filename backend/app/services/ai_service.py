@@ -4,7 +4,9 @@ import httpx
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env from backend root (two levels up from this file)
+_env_path = Path(__file__).parent.parent.parent / ".env"
+load_dotenv(_env_path)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 HF_TOKEN = os.getenv("HF_TOKEN")
