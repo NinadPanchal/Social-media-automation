@@ -2,8 +2,6 @@
 
 AutoSocial AI is a professional-grade, AI-powered social media automation platform designed to streamline content creation, scheduling, and analytics across multiple social networks.
 
-![Landing Page](https://raw.githubusercontent.com/NinadPanchal/Social-media-automation/main/screenshots/landing.png)
-
 ## 🚀 Features
 
 - **AI Content Generation**: Leverage Google Gemini AI to generate platform-optimized posts for Instagram, Twitter, and LinkedIn from a single prompt.
