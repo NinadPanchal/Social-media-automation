@@ -68,7 +68,7 @@ export default function Footer() {
                                 {links.map((link) => (
                                     <a
                                         key={link}
-                                        href="#"
+                                        href={link === 'Documentation' ? "https://github.com/NinadPanchal/Social-media-automation#readme" : "#"}
                                         style={{
                                             fontSize: 13,
                                             color: 'var(--color-muted)',
@@ -105,7 +105,7 @@ export default function Footer() {
                         {['Twitter', 'LinkedIn', 'GitHub'].map((social) => (
                             <a
                                 key={social}
-                                href="#"
+                                href={social === 'GitHub' ? "https://github.com/NinadPanchal/Social-media-automation" : "#"}
                                 style={{
                                     fontSize: 12,
                                     color: 'var(--color-muted)',
