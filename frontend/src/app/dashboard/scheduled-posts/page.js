@@ -64,8 +64,8 @@ export default function ScheduledPostsPage() {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div className="flex flex-col gap-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                 <div>
                     <h1 style={{ fontSize: 32, fontWeight: 600, color: 'var(--color-bg-light)', marginBottom: 8, letterSpacing: '-0.02em' }}>
                         Scheduled Posts
@@ -105,77 +105,79 @@ export default function ScheduledPostsPage() {
                         </Link>
                     </div>
                 ) : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr style={{
-                                borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                                backgroundColor: 'rgba(0,0,0,0.2)'
-                            }}>
-                                <th style={ThStyle}>Platform</th>
-                                <th style={ThStyle}>Content Snippet</th>
-                                <th style={ThStyle}>Scheduled For</th>
-                                <th style={ThStyle}>Status</th>
-                                <th style={{ ...ThStyle, textAlign: 'right' }}>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {posts.map((sp) => (
-                                <tr key={sp.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.02)', transition: 'background 0.15s' }}
-                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.01)'}
-                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
-                                    <td style={{ ...TdStyle }}>
-                                        <span style={{ fontWeight: 500, color: getPlatformColor(sp.post?.platform) }}>
-                                            {sp.post?.platform}
-                                        </span>
-                                    </td>
-                                    <td style={{ ...TdStyle, color: 'var(--color-muted)', maxWidth: 300 }}>
-                                        <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                            {sp.post?.content}
-                                        </div>
-                                    </td>
-                                    <td style={TdStyle}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                            <Clock size={14} color="var(--color-muted)" />
-                                            {new Date(sp.scheduled_time).toLocaleString()}
-                                        </div>
-                                    </td>
-                                    <td style={TdStyle}>
-                                        <span style={{
-                                            padding: '4px 10px',
-                                            borderRadius: 20,
-                                            fontSize: 12,
-                                            fontWeight: 500,
-                                            backgroundColor: 'rgba(255,255,255,0.05)',
-                                            color: getStatusColor(sp.status),
-                                            textTransform: 'capitalize',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: 4
-                                        }}>
-                                            {sp.status === 'published' && <CheckCircle size={10} />}
-                                            {sp.status}
-                                        </span>
-                                    </td>
-                                    <td style={{ ...TdStyle, textAlign: 'right' }}>
-                                        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                                            <button
-                                                onClick={() => handleDelete(sp.id)}
-                                                disabled={deletingId === sp.id}
-                                                style={{
-                                                    ...ActionBtnStyle,
-                                                    color: '#ef4444',
-                                                    opacity: deletingId === sp.id ? 0.5 : 1
-                                                }}>
-                                                {deletingId === sp.id
-                                                    ? <Loader2 size={14} className="animate-spin" />
-                                                    : <Trash2 size={14} />}
-                                            </button>
-                                        </div>
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+                            <thead>
+                                <tr style={{
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                                    backgroundColor: 'rgba(0,0,0,0.2)'
+                                }}>
+                                    <th style={ThStyle}>Platform</th>
+                                    <th style={ThStyle}>Content Snippet</th>
+                                    <th style={ThStyle}>Scheduled For</th>
+                                    <th style={ThStyle}>Status</th>
+                                    <th style={{ ...ThStyle, textAlign: 'right' }}>Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {posts.map((sp) => (
+                                    <tr key={sp.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.02)', transition: 'background 0.15s' }}
+                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.01)'}
+                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
+                                        <td style={{ ...TdStyle }}>
+                                            <span style={{ fontWeight: 500, color: getPlatformColor(sp.post?.platform) }}>
+                                                {sp.post?.platform}
+                                            </span>
+                                        </td>
+                                        <td style={{ ...TdStyle, color: 'var(--color-muted)', maxWidth: 300 }}>
+                                            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                {sp.post?.content}
+                                            </div>
+                                        </td>
+                                        <td style={TdStyle}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                <Clock size={14} color="var(--color-muted)" />
+                                                {new Date(sp.scheduled_time).toLocaleString()}
+                                            </div>
+                                        </td>
+                                        <td style={TdStyle}>
+                                            <span style={{
+                                                padding: '4px 10px',
+                                                borderRadius: 20,
+                                                fontSize: 12,
+                                                fontWeight: 500,
+                                                backgroundColor: 'rgba(255,255,255,0.05)',
+                                                color: getStatusColor(sp.status),
+                                                textTransform: 'capitalize',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: 4
+                                            }}>
+                                                {sp.status === 'published' && <CheckCircle size={10} />}
+                                                {sp.status}
+                                            </span>
+                                        </td>
+                                        <td style={{ ...TdStyle, textAlign: 'right' }}>
+                                            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+                                                <button
+                                                    onClick={() => handleDelete(sp.id)}
+                                                    disabled={deletingId === sp.id}
+                                                    style={{
+                                                        ...ActionBtnStyle,
+                                                        color: '#ef4444',
+                                                        opacity: deletingId === sp.id ? 0.5 : 1
+                                                    }}>
+                                                    {deletingId === sp.id
+                                                        ? <Loader2 size={14} className="animate-spin" />
+                                                        : <Trash2 size={14} />}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
         </div>

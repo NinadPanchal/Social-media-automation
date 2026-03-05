@@ -38,7 +38,7 @@ sleep 0.5
 
 # Start backend
 echo -e "${GREEN}⚙️  Starting FastAPI backend on http://localhost:8001${NC}"
-(cd "$BACKEND_DIR" && source venv/bin/activate && uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload) &
+(cd "$BACKEND_DIR" && ./venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload) &
 BACKEND_PID=$!
 
 # Wait for backend to start

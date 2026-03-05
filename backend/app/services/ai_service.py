@@ -120,20 +120,20 @@ async def generate_image(prompt: str) -> str:
         from huggingface_hub import InferenceClient
         
         client = InferenceClient(
-            provider="fal-ai",
+            provider="nscale",
             api_key=HF_TOKEN,
         )
         
         # Generate the image (returns a PIL.Image object)
         image = client.text_to_image(
             image_prompt,
-            model="black-forest-labs/FLUX.1-dev",
+            model="stabilityai/stable-diffusion-xl-base-1.0",
         )
         
         # Save the image
         filename = f"{uuid.uuid4().hex}.png"
         filepath = IMAGES_DIR / filename
-        image.save(str(filepath), "PNG")
+        image.save(str(filepath))
         
         print(f"Image saved: {filepath}")
         return filename

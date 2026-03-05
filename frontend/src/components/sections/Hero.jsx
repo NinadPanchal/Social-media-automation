@@ -204,7 +204,7 @@ export default function Hero() {
                     }}
                 >
                     <div className="hero-cta">
-                        <Link href="/dashboard/create-post" passHref legacyBehavior>
+                        <Link href="/dashboard/create-post">
                             <MagneticButton>
                                 Start Automating <ArrowRight size={16} />
                             </MagneticButton>

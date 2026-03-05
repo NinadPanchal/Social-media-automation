@@ -60,7 +60,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Stats Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {statCards.map((stat, i) => {
                     const Icon = stat.icon;
                     return (
@@ -93,8 +93,8 @@ export default function DashboardPage() {
             </div>
 
             {/* Recent & Scheduled Previews */}
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24 }}>
-                <div style={{
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2" style={{
                     padding: 24,
                     borderRadius: 'var(--radius-lg)',
                     backgroundColor: 'rgba(255, 255, 255, 0.03)',
@@ -140,7 +140,7 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                <div style={{
+                <div className="col-span-1" style={{
                     padding: 24,
                     borderRadius: 'var(--radius-lg)',
                     backgroundColor: 'rgba(255, 255, 255, 0.03)',

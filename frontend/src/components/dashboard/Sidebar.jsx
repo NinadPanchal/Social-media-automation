@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { LayoutDashboard, PenSquare, Calendar, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }) {
     const pathname = usePathname();
     const { logout } = useAuth();
 
@@ -16,18 +16,12 @@ export default function Sidebar() {
     ];
 
     return (
-        <aside style={{
-            width: 260,
-            height: '100vh',
+        <aside className="w-[260px] h-full flex flex-col" style={{
             borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-            backgroundColor: 'rgba(10, 10, 10, 0.95)',
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'sticky',
-            top: 0,
+            backgroundColor: 'rgba(10, 10, 10, 0.98)',
         }}>
             <div style={{ padding: '32px 24px', flexShrink: 0 }}>
-                <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <Link href="/" onClick={onClose} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{
                         width: 32,
                         height: 32,
@@ -56,6 +50,7 @@ export default function Sidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
+                            onClick={onClose}
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -84,7 +79,7 @@ export default function Sidebar() {
 
             <div style={{ padding: '24px 16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
                 <button
-                    onClick={logout}
+                    onClick={() => { logout(); if (onClose) onClose(); }}
                     style={{
                         display: 'flex',
                         alignItems: 'center',

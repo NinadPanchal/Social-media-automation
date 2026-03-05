@@ -189,10 +189,10 @@ export default function CreatePostPage() {
     };
 
     return (
-        <div style={{ display: 'flex', gap: 32, height: 'calc(100vh - 80px)' }}>
+        <div className="flex flex-col lg:flex-row gap-8 lg:min-h-[calc(100vh-80px)] pb-10 lg:pb-0 overflow-visible lg:overflow-hidden">
 
             {/* Left Panel: Prompt Input */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24, maxWidth: 500 }}>
+            <div className="w-full lg:max-w-[500px] flex flex-col gap-6 shrink-0 lg:overflow-y-auto">
                 <div>
                     <h1 style={{ fontSize: 32, fontWeight: 600, color: 'var(--color-bg-light)', marginBottom: 8, letterSpacing: '-0.02em' }}>
                         Create <span className="text-gradient-accent" style={{ fontStyle: 'italic', fontFamily: 'var(--font-accent)' }}>Magic.</span>
@@ -360,13 +360,10 @@ export default function CreatePostPage() {
             </div>
 
             {/* Right Panel: Results Grid */}
-            <div style={{
-                flex: 1.5,
+            <div className="flex-1 flex flex-col min-h-[500px]" style={{
                 backgroundColor: 'rgba(10, 10, 10, 0.4)',
                 borderRadius: 'var(--radius-xl)',
                 border: '1px solid rgba(255, 255, 255, 0.05)',
-                display: 'flex',
-                flexDirection: 'column',
                 overflow: 'hidden'
             }}>
                 <div style={{
@@ -534,7 +531,7 @@ export default function CreatePostPage() {
                             </div>
 
                             {/* Date & Time */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label style={{ fontSize: 12, color: 'var(--color-muted)', marginBottom: 6, display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date</label>
                                     <input type="date" value={scheduleDate} onChange={e => setScheduleDate(e.target.value)} required
