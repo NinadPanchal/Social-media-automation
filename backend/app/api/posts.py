@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List
+from pathlib import Path
 from app import schemas, models
 from app.api.deps import get_current_user
 from app.database import get_db
-from app.services.ai_service import generate_social_content
+from app.services.ai_service import generate_social_content, generate_image, IMAGES_DIR
 
 router = APIRouter(
     prefix="/api",
@@ -167,3 +169,26 @@ def connect_platform(
     db.commit()
     
     return {"status": "success", "message": f"Successfully connected to {request.platform}"}
+
+
+@router.post("/generate-image", response_model=schemas.ImageGenerateResponse)
+async def generate_post_image(
+    request: schemas.ImageGenerateRequest,
+    current_user: models.User = Depends(get_current_user)
+):
+    try:
+        filename = await generate_image(request.prompt)
+        return {"image_url": f"/api/images/{filename}"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate image: {str(e)}"
+        )
+
+
+@router.get("/images/{filename}")
+async def get_generated_image(filename: str):
+    filepath = IMAGES_DIR / filename
+    if not filepath.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(str(filepath), media_type="image/png")

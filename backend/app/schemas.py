@@ -89,3 +89,10 @@ class DashboardStats(BaseModel):
     
 class ConnectPlatformRequest(BaseModel):
     platform: str
+
+# --- Image Generation Schemas ---
+class ImageGenerateRequest(BaseModel):
+    prompt: str
+
+class ImageGenerateResponse(BaseModel):
+    image_url: str

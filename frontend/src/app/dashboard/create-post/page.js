@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Save, Calendar, Send, Loader2, X, Clock } from 'lucide-react';
+import { Sparkles, Save, Calendar, Send, Loader2, X, Clock, Image, Download, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export default function CreatePostPage() {
@@ -12,6 +12,11 @@ export default function CreatePostPage() {
     const [error, setError] = useState(null);
     const [saveMsg, setSaveMsg] = useState(null);
 
+    // Image generation state
+    const [imageUrl, setImageUrl] = useState(null);
+    const [imageLoading, setImageLoading] = useState(false);
+    const [imageError, setImageError] = useState(null);
+
     // Schedule modal state
     const [scheduleModal, setScheduleModal] = useState(false);
     const [schedulePlatform, setSchedulePlatform] = useState('Instagram');
@@ -21,12 +26,40 @@ export default function CreatePostPage() {
     const [scheduling, setScheduling] = useState(false);
     const [scheduleSuccess, setScheduleSuccess] = useState(null);
 
+    const generateImage = async (imagePrompt) => {
+        setImageLoading(true);
+        setImageError(null);
+        setImageUrl(null);
+
+        try {
+            const res = await fetch('/api/generate-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ prompt: imagePrompt })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || 'Failed to generate image');
+
+            setImageUrl(data.image_url);
+        } catch (err) {
+            setImageError(err.message);
+        } finally {
+            setImageLoading(false);
+        }
+    };
+
     const handleGenerate = async () => {
         if (!prompt.trim()) return;
 
         setLoading(true);
         setError(null);
         setGeneratedResults(null);
+        setImageUrl(null);
+        setImageError(null);
 
         try {
             const res = await fetch('/api/generate-post', {
@@ -66,6 +99,9 @@ export default function CreatePostPage() {
                     }
                 }, 15);
             });
+
+            // Start image generation in parallel
+            generateImage(prompt);
 
         } catch (err) {
             setError(err.message);
@@ -134,6 +170,24 @@ export default function CreatePostPage() {
         }
     };
 
+    const handleDownloadImage = async () => {
+        if (!imageUrl) return;
+        try {
+            const res = await fetch(imageUrl);
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `autosocial-${Date.now()}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Download failed:', err);
+        }
+    };
+
     return (
         <div style={{ display: 'flex', gap: 32, height: 'calc(100vh - 80px)' }}>
 
@@ -144,7 +198,7 @@ export default function CreatePostPage() {
                         Create <span className="text-gradient-accent" style={{ fontStyle: 'italic', fontFamily: 'var(--font-accent)' }}>Magic.</span>
                     </h1>
                     <p style={{ color: 'var(--color-muted)', fontSize: 16 }}>
-                        Describe what you want to post about. AI will write platform-optimized copy for Instagram, Twitter, and LinkedIn simultaneously.
+                        Describe what you want to post about. AI will write platform-optimized copy and generate a stunning image.
                     </p>
                 </div>
 
@@ -157,7 +211,7 @@ export default function CreatePostPage() {
                     flexDirection: 'column',
                     gap: 16,
                     flex: 1,
-                    maxHeight: 400
+                    maxHeight: 300
                 }}>
                     <textarea
                         value={prompt}
@@ -210,6 +264,99 @@ export default function CreatePostPage() {
                         {saveMsg}
                     </div>
                 )}
+
+                {/* Generated Image Card */}
+                <div style={{
+                    borderRadius: 'var(--radius-lg)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    overflow: 'hidden',
+                }}>
+                    <div style={{
+                        padding: '12px 16px',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        background: 'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 500, color: 'var(--color-bg-light)' }}>
+                            <Image size={14} style={{ color: 'var(--color-accent)' }} />
+                            AI Generated Image
+                        </div>
+                        {imageUrl && (
+                            <div style={{ display: 'flex', gap: 6 }}>
+                                <button onClick={() => generateImage(prompt)} title="Regenerate image"
+                                    style={{ ...SmallBtnStyle, color: 'var(--color-accent)' }}>
+                                    <RefreshCw size={12} />
+                                </button>
+                                <button onClick={handleDownloadImage} title="Download image"
+                                    style={{ ...SmallBtnStyle, color: 'var(--color-accent)' }}>
+                                    <Download size={12} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div style={{ padding: 12, minHeight: 160 }}>
+                        {!imageUrl && !imageLoading && !imageError && (
+                            <div style={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                height: 140, color: 'var(--color-muted)', gap: 8
+                            }}>
+                                <Image size={28} opacity={0.2} />
+                                <span style={{ fontSize: 12 }}>Image will appear here after generation</span>
+                            </div>
+                        )}
+
+                        {imageLoading && (
+                            <div style={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                height: 140, gap: 12
+                            }}>
+                                <div style={{
+                                    width: '100%', height: 140, borderRadius: 'var(--radius-md)',
+                                    background: 'linear-gradient(90deg, rgba(201,168,76,0.05) 25%, rgba(201,168,76,0.15) 50%, rgba(201,168,76,0.05) 75%)',
+                                    backgroundSize: '200% 100%',
+                                    animation: 'shimmer 1.5s ease-in-out infinite',
+                                }} />
+                                <span style={{ fontSize: 12, color: 'var(--color-accent)' }}>
+                                    <Loader2 size={12} className="animate-spin" style={{ display: 'inline', marginRight: 6 }} />
+                                    Generating image with FLUX.1...
+                                </span>
+                            </div>
+                        )}
+
+                        {imageError && (
+                            <div style={{
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                height: 140, gap: 10
+                            }}>
+                                <div style={{ color: '#ef4444', fontSize: 12, backgroundColor: 'rgba(239,68,68,0.1)', padding: '8px 12px', borderRadius: 4 }}>
+                                    {imageError}
+                                </div>
+                                <button onClick={() => generateImage(prompt)}
+                                    style={{ ...SmallBtnStyle, fontSize: 11, color: 'var(--color-accent)', gap: 4, display: 'flex', alignItems: 'center' }}>
+                                    <RefreshCw size={10} /> Retry
+                                </button>
+                            </div>
+                        )}
+
+                        {imageUrl && (
+                            <img
+                                src={imageUrl}
+                                alt="AI Generated"
+                                style={{
+                                    width: '100%',
+                                    borderRadius: 'var(--radius-md)',
+                                    objectFit: 'cover',
+                                    maxHeight: 300,
+                                    display: 'block',
+                                }}
+                            />
+                        )}
+                    </div>
+                </div>
             </div>
 
             {/* Right Panel: Results Grid */}
@@ -436,6 +583,13 @@ export default function CreatePostPage() {
                     </div>
                 </div>
             )}
+
+            <style jsx>{`
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+            `}</style>
         </div>
     );
 }
