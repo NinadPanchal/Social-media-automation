@@ -42,7 +42,7 @@ async def generate_social_content(prompt: str) -> list[dict]:
         raise ValueError("GEMINI_API_KEY is not configured.")
 
     content = ""
-    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}"
     
     try:
         async with httpx.AsyncClient() as client:
@@ -89,7 +89,7 @@ async def generate_image_prompt(user_prompt: str) -> str:
     - Do NOT include any text or words in the image description (AI image generators are bad at text)
     """
     
-    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={GEMINI_API_KEY}"
     
     try:
         async with httpx.AsyncClient() as client:
