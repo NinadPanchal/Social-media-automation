@@ -21,3 +21,9 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Obsidian
+.obsidian/
+
+# Application generated
+backend/generated_images/
